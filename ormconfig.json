@@ -6,7 +6,7 @@
     "password": "root",
     "database": "users",
     "synchronize": true,
-    "entities": ["dist/entities/*.entity.js"],
+    "entities": ["*/entities/*.entity{.ts,.js}"],
     "cli": {
       "entitiesDir": "src/entities/"
     }

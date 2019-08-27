@@ -1,4 +1,4 @@
-import { Controller, Request, HttpStatus, Post, Get, UseGuards, Param, Body, Res, Logger } from '@nestjs/common';
+import { Controller, HttpStatus, Post, Get, UseGuards, Param, Body, Res, Logger } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { UserService } from '../services';
 import { User } from '../entities';
@@ -22,7 +22,6 @@ export class UserController {
         }
     }
 
-    @UseGuards(AuthGuard('jwt'))
     @Post('create')
     async create(@Body() user: User, @Res() res: Response) {
         const creationResponse = await this.service.createUser(user);

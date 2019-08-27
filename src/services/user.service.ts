@@ -20,25 +20,25 @@ export class UserService {
         let user: User;
         try {
             user = await this.usersRepository.findOne({
-                select: ['id', 'userName', 'firstName', 'lastName', 'organizationId', 'role', 'email'],
+                select: ['userName', 'firstName', 'lastName', 'organizationId', 'role', 'email'],
                 where: [{ id }],
             });
         } catch (error) {
-            Logger.error('Error while looking for user in DB' + error);
+            Logger.error('Error while looking for user in DB: ' + error);
             return {
                 success: false,
                 message: {
-                    error_message: 'Error looking in DB',
+                    error_message: 'Error looking in DB.',
                 },
                 data: {},
             };
         }
         if (!user) {
-            Logger.error('No user found');
+            Logger.error('No user found!');
             return {
                 success: false,
                 message: {
-                    error_message: 'No user found',
+                    error_message: 'No user found!',
                 },
                 data: {},
             };
@@ -46,7 +46,7 @@ export class UserService {
             Logger.log('User found' + user);
             return {
                 success: true,
-                message: 'User found',
+                message: 'User found!',
                 data: user,
             };
         }

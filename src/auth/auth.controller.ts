@@ -1,6 +1,7 @@
-import { Controller, Request, Post, Get, UseGuards, Logger } from '@nestjs/common';
+import { Controller, Request, Post, Get, UseGuards, Res, Logger, HttpStatus } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from '../services';
+import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -14,16 +15,17 @@ export class AuthController {
     */
     @UseGuards(AuthGuard('local'))
     @Post('login')
-    async login(@Request() req) {
+    async login(@Request() req, @Res() res: Response) {
         const user = await this.authService.login(req.user);
         Logger.log('Response returned ' + user);
+        return res.status(HttpStatus.OK).json(user);
     }
 
     @UseGuards(AuthGuard('jwt'))
     @Get('me')
-    async getProfile(@Request() req) {
+    async getProfile(@Request() req, @Res() res: Response) {
         const user = await req.user;
         Logger.log('Response returned ' + user);
-        return user;
+        return res.status(HttpStatus.OK).json(user);
     }
 }

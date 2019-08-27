@@ -16,9 +16,11 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "mocha --compilers ts:ts-node/register ./test/*.spec.ts"
   },
   "dependencies": {
+    "body-parser": "^1.13.2",
+    "express": "^4.13.1",
     "@nestjs/common": "6.5.3",
     "@nestjs/core": "6.5.3",
     "@nestjs/jwt": "^6.1.1",
@@ -57,11 +59,13 @@
     "@types/supertest": "2.0.7",
     "concurrently": "4.1.2",
     "jest": "23.6.0",
+    "mocha": "^6.2.0",
     "nodemon": "1.19.1",
     "prettier": "1.18.2",
-    "supertest": "4.0.2",
+    "should": "^13.2.3",
+    "supertest": "^4.0.2",
     "ts-jest": "^24.0.2",
-    "ts-node": "8.1.0",
+    "ts-node": "^8.1.0",
     "tsc-watch": "^2.4.0",
     "tsconfig-paths": "3.8.0",
     "tslint": "5.19.0",

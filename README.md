@@ -1,42 +1,32 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
+## Brilliant Service
 
-[travis-image]: https://api.travis-ci.org/nestjs/nest.svg?branch=master
-[travis-url]: https://travis-ci.org/nestjs/nest
-[linux-image]: https://img.shields.io/travis/nestjs/nest/master.svg?label=linux
-[linux-url]: https://travis-ci.org/nestjs/nest
-  
-  <p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications, heavily inspired by <a href="https://angular.io" target="blank">Angular</a>.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/dm/@nestjs/core.svg" alt="NPM Downloads" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://api.travis-ci.org/nestjs/nest.svg?branch=master" alt="Travis" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://img.shields.io/travis/nestjs/nest/master.svg?label=linux" alt="Linux" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#5" alt="Coverage" /></a>
-<a href="https://gitter.im/nestjs/nestjs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge"><img src="https://badges.gitter.im/nestjs/nestjs.svg" alt="Gitter" /></a>
-<a href="https://opencollective.com/nest#backer"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec"><img src="https://img.shields.io/badge/Donate-PayPal-dc3d53.svg"/></a>
-  <a href="https://twitter.com/nestframework"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Brilliant service provides authentication system for users handled using Passport  local and JWT strategy authentication built using:
 
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+* [Typescript](https://typescriptlang.org)
+* [Nest](https://github.com/nestjs/nest)
+* [TypeORM](https://github.com/typeorm/typeorm)
+* [Express](https://expressjs.com/en/guide/routing.html)
+* [MySQL](https://www.mysql.com)
+* [Mocha](https://mochajs.org/) - for black box API testing
 
 ## Installation
+
+Install Node modules using :
 
 ```bash
 $ npm install
 ```
 
+Checkout installation guide for MySQL [here](https://www.digitalocean.com/community/tutorials/how-to-install-mysql-on-ubuntu-16-04).
+
 ## Running the app
 
+Create a database named ```users``` using ```root``` user and update configurations on [ormconfig.json](./ormconfig.json) file.
 ```bash
+
+# start mysql server
+$ sudo service mysql start
+
 # development
 $ npm run start
 
@@ -47,29 +37,120 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+## APIs
+
+### /auth/login
+
+Purpose: To login the application using passport strategy
+
+Method: 
+```js
+POST
+```
+Headers:
+```js
+Content-type: application/json
+```
+Body:
+```js
+{
+  username: user,
+  password: pass
+}
+```
+
+### /auth/me
+
+Purpose: To get details of the user. Uses JWT strategy to authenticate user.
+
+Method: 
+```js
+GET
+```
+Headers:
+```js
+Content-type: application/json
+Authorization : Bearer auth_token
+```
+
+### /user/create
+
+Purpose: To create user with the details provided in body
+
+Method: 
+```js
+POST
+```
+Headers:
+```js
+Content-type: application/json
+```
+Body:
+```js
+{
+  userName: user, // string, unique, required, 4-20 chars
+  password: pass, //string, required, 4-100 chars
+  firstName: first, //string, required, 4-20 chars
+  lastName: last, //string, required, 4-20 chars
+  organizationId: oid, //string, required, 2-20 chars
+  role: role //string, required, 4-20 chars
+}
+```
+### /user/:id
+
+Purpose: To get user details based on id
+
+Path Params:
+
+```js
+id : 1 // number
+```
+
+Method: 
+```js
+GET
+```
+Headers:
+```js
+Content-type: application/json
+Authorization : Bearer auth_token
+```
+
+
+
 ## Test
+
+Run the application using steps above and then unit testing can be done using following steps:
 
 ```bash
 # unit tests
-$ npm run test
+$ npm install -g mocha
+$ mocha
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
 ```
 
-## Support
+## Thought Process
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+* My first thought was to transform the code into a much modular approach, something like Angular. I personally prefer Typescript over Javascript because of its object oriented nature and modular support so used it.
 
-## Stay in touch
+* I first developed the [service](https://github.com/Achint08/brilliant) without any framework but that didn't had a much cleaner and structured architecture as I wanted it to be as an enterprise grade application. It was then I came across Nest. As the Nest Documentation states, Nest provides an out-of-the-box application architecture which allows developers and teams to create highly testable, scalable, loosely coupled, and easily maintainable applications.
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+* During the developement hours, when I  looked at the assignment code, I realized that there were certain glitches which could have been resolved for a efficient working of the code. There could be much more focus on code readibility for easing life of future developers and saving development costs. The code level scalability could be improved in a sense that if a new requirements comes, in how much of a change, we can adapt to that requirement.
 
-## License
+* In an enterprise-grade application, it is a must to keep security on priority. There are certain middlewares and encryption used to avoid and save from attacks like brute force, phising from hackers, password stealing.
 
-  Nest is [MIT licensed](LICENSE).
+* The code contains comments wherever required to explain the purpose of functions, classes and its methods, and so that documents can be easily created.
+
+* The focus was also for correct use of HTTP Standards so as to facilitate the work and clear API definitions and policy for other services which might use the brilliant authentication service.
+
+* The database schema and validation is adjusted to cover up maximal correct user data points. The black box testing meticuluously test each of the case for validation.
+
+* Use of passport strategy(username/password) strategy and JWT strategy is used so that autheticated users of client side applications can connect securely with server.
+
+* The dependency framework injection remove the dependency by separating the usage from the creation of the object. This reduces the amount of required boilerplate code and improves flexibility. This help a long way to reduce occupied memory and lesser code. The current application takes these advantage from this featured framework.
+
+* The focus was also for proper logging mechanism to catch and debug the root cause of any issue faced by system using standardized Logger and use of correct levels so that different log streams can be created in future. Currently, stream is set to ```console```.
+
+* The focus was also for handling exception wherever possible to avoid server crash and use of logging to understand the reason for exception by trace backing the stack.
+
+* The end to end black box API testing clearly abstracts the policy from the mechanism of API. The testing clearly tests if the API policy is maintained. If in future, any changes to mechanism of API is done, the testing would help test the policy.

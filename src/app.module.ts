@@ -7,7 +7,15 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(), UserModule, AuthModule],
+  imports: [
+  /*
+  * The forRoot() method accepts the same configuration
+  * object as createConnection() from the TypeORM package.
+  */
+  TypeOrmModule.forRoot(),
+  UserModule,
+  AuthModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

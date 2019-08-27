@@ -1,7 +1,10 @@
-
 import { Entity, PrimaryGeneratedColumn, Column, Unique, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { Length, IsNotEmpty } from 'class-validator';
 
+/*
+* The TypeORM supports the repository design pattern, so each entity has its own Repository.
+* These repositories can be obtained from the database connection.
+*/
 @Entity()
 @Unique(['userName'])
 export class User {

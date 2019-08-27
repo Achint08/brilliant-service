@@ -2,9 +2,10 @@ import { Injectable, Inject, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
-import { LoginDetails, UserDetails } from '../interfaces';
+import { LoginDetails, UserDetails, UserResponse } from '../interfaces';
 import { JwtService } from '@nestjs/jwt';
 import { checkIfUnencryptedPasswordIsValid } from '../utils';
+import { UserModule } from 'src/user/user.module';
 
 @Injectable()
 export class AuthService {
@@ -17,29 +18,55 @@ export class AuthService {
 
     /*
     * Validates the user
-    * @prop: [data: newUser]: Essential details for New User
+    * @param: [data: newUser]: Essential details for New User
     */
     public async validateUser(data: LoginDetails): Promise<UserDetails | null> {
-        const user = await this.usersRepository.findOne({
+      let user: User;
+      try {
+          user = await this.usersRepository.findOne({
             select: ['id', 'password', 'userName', 'firstName', 'lastName', 'organizationId', 'role', 'email'],
             where: [{ userName : data.userName }],
           });
-        Logger.log(user);
-        if (user && checkIfUnencryptedPasswordIsValid(data.password, user.password)) {
-            return user;
-          }
-        return null;
+        } catch (error) {
+          Logger.error('Error while looking in DB' + error);
+          return null;
+        }
+      Logger.warn('No User found for ' + data.userName);
+      if (user && checkIfUnencryptedPasswordIsValid(data.password, user.password)) {
+          Logger.warn('User ' + data.userName + ' Validated!');
+          return user;
+        }
+      Logger.warn('Password Mismatch for ' + data.userName);
+      return null;
     }
 
     /*
     * Logins the user
-    * @prop: [data: user]: User deatils for logins
+    * @param: [data: user]: User deatils for logins
     * @returns: [token: any]: Signed JWT Token
     */
-    public async login(user: any) {
+    public async login(user: any): Promise<UserResponse> {
+        let accessToken: string;
         const payload = { userName: user.userName, id: user.id };
+        Logger.log('User ' + payload.userName + ' Authenticated');
+        try {
+          accessToken = this.jwtService.sign(payload);
+        } catch (error) {
+          Logger.error('Error while generating JWT string');
+          return {
+            success: false,
+            message: {
+              error_message: 'Error while generating JWT.',
+            },
+            data: {},
+          };
+        }
         return {
-          access_token: this.jwtService.sign(payload),
+          success: true,
+          message: 'Authenticated!',
+          data: {
+            access_token: accessToken,
+          },
         };
       }
 }
